@@ -49,7 +49,7 @@ func saveProcessedExpenses(result []models.Expense,db *storage.DB){
 }
 
 func ProcessExpenses(db *storage.DB) []models.Expense {
-	allItems, _ := db.GetAllExpenses()
+	allItems, _ := db.GetUncategorized()
 	var extList []models.Expense
 	reader := bufio.NewReader(os.Stdin)
 
@@ -91,6 +91,8 @@ func ProcessExpenses(db *storage.DB) []models.Expense {
 				Date: value.Date, 
 				SourceFile: value.SourceFile, 
 				Category: finalCategory})
+
+			db.UpdateCategory(value.ID, finalCategory)
 
 			continue
 		}
@@ -147,12 +149,14 @@ func ProcessExpenses(db *storage.DB) []models.Expense {
 			SourceFile: value.SourceFile, 
 			Category: finalCategory})
 
+		db.UpdateCategory(value.ID, finalCategory)
+
 	}
 
 	fmt.Println("\n" + models.StyleBold + "--- SUMMARY ---" + models.ColorReset)
 	fmt.Printf("Categorized %d expenses.\n", len(extList))
 
-	defer saveProcessedExpenses(extList, db)
+	saveProcessedExpenses(extList, db)
 	return extList
 }
 

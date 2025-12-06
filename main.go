@@ -16,7 +16,7 @@ func main() {
 	// 1. Setup Paths
 	// We assume the app is run from the root expense-cli/ folder
 	dataDir := "./data"
-	filesDir := filepath.Join(dataDir, "files")
+	//filesDir := filepath.Join(dataDir, "files")
 	dbPath := filepath.Join(dataDir, "expenses.db")
 
 	// 2. Initialize Database
@@ -33,11 +33,26 @@ func main() {
 	classifyCmd := flag.NewFlagSet("classify", flag.ExitOnError)
 	viewCmd := flag.NewFlagSet("view", flag.ExitOnError)
 	viewMonth := viewCmd.String("month", "", "Group expenses by: 'month' or 'category'")
+	//importFile := importCmd.String("f", "", "File to import")
 
 	switch os.Args[1] {
 	case "import":
 		importCmd.Parse(os.Args[2:])
-		HandleImport(db, filesDir)
+		var filePath string
+
+		if len(importCmd.Args()) > 0 {
+			filePath = importCmd.Arg(0)
+		}
+
+        // 5. Validation
+        if filePath == "" {
+            fmt.Println("Error: Please provide a file path.")
+            fmt.Println("Usage: go run main.go import ./some.txt")
+            os.Exit(1)
+        }
+		absPath, _ := filepath.Abs(filePath)
+		fmt.Println(absPath)
+		HandleImport(db, absPath)
 
 	case "classify":
 		classifyCmd.Parse(os.Args[2:])
@@ -76,7 +91,7 @@ func main() {
 func HandleImport(db *storage.DB, dir string) {
 	fmt.Println("Scanning for files in:", dir)
 	
-	expenses, err := ingest.LoadFiles(dir)
+	expenses, err := ingest.LoadFile(dir)
 	if err != nil {
 		fmt.Printf("Error loading files: %v\n", err)
 		return

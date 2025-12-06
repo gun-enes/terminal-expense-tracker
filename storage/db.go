@@ -130,8 +130,14 @@ func (d *DB) SaveExpense(e models.Expense) error {
 		return err
 	}
 	defer stmt.Close()
+	var cat string
+	if e.Category != "" {
+		cat = e.Category
+	}else{
+		cat = "Uncategorized"
+	}
 
-	_, err = stmt.Exec(e.Date.Format(time.RFC3339), e.Description, e.Amount, e.Category, e.SourceFile, e.Label)
+	_, err = stmt.Exec(e.Date.Format(time.RFC3339), e.Description, e.Amount, cat, e.SourceFile, e.Label)
 	if err != nil {
 		return fmt.Errorf("insert error: %v", err)
 	}
