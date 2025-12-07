@@ -24,15 +24,15 @@ const (
 
 // --- CONFIGURATION ---
 var Categories = []Category{
-	{Name: "kafe", Aliases: []string{"KAFE", "CAFE", "COFFE", "STARBUCKS", "ESPRESSO"}},
-	{Name: "yeme / içme", Aliases: []string{"RESTORAN", "BURGER", "KFC", "PIZZA"}},
-	{Name: "market", Aliases: []string{"MARKET", "FIRIN", "MİGROS", "BİM", "A101", "CARREFOUR"}},
-	{Name: "alkol", Aliases: []string{"ALKOL", "BAR", "TEKEL"}},
-	{Name: "sigara", Aliases: []string{"SIGARA"}},
-	{Name: "ulaşım", Aliases: []string{"ULAŞIM", "EGO", "TAKSI", "UBER", "MARTI"}},
+	{Name: "kafe", Aliases: []string{"KAFE", "CAFE", "COFFE", "ARABICA", "GREENWICH", "STARBUCKS", "ESPRESSO"}},
+	{Name: "yemek", Aliases: []string{"RESTORAN", "BURGER", "KFC", "PIZZA"}},
+	{Name: "market", Aliases: []string{"MARKET", "FIRIN", "MİGROS", "ÇAĞDAŞ", "BİM", "A101", "CARREFOUR"}},
+	{Name: "alkol", Aliases: []string{"ALKOL", "BAR", "PUB"}},
+	{Name: "sigara", Aliases: []string{"SIGARA", "AKGRUP"}},
+	{Name: "ulaşım", Aliases: []string{"ULAŞIM", "HOP", "EGO", "TAKSI", "UBER", "MARTI"}},
 	{Name: "seyahat", Aliases: []string{"SEYAHAT", "PEGASUS", "THY", "OTEL", "BNB"}},
 	{Name: "hediye", Aliases: []string{"HEDIYE", "CICEK"}},
-	{Name: "alışveriş", Aliases: []string{"ALIŞVERIŞ", "GİYİM", "ZARA", "MANGO", "TRENDYOL", "HEPSIBURADA"}},
+	{Name: "alışveriş", Aliases: []string{"ALIŞVERIŞ", "AMAZON", "MAVI", "GİYİM", "ZARA", "MANGO", "TRENDYOL", "HEPSIBURADA"}},
 	{Name: "bakım", Aliases: []string{"BAKIM", "KUAFOR", "BERBER", "ECZANE"}},
 	{Name: "faturalar", Aliases: []string{"FATURA", "TURKCELL", "VODAFONE", "ENERJISA", "ASKI"}},
 	{Name: "eğlence", Aliases: []string{"EĞLENCE", "NETFLIX", "SPOTIFY", "STEAM", "SINEMA"}},

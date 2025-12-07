@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 func main() {
@@ -34,6 +35,11 @@ func main() {
 	viewCmd := flag.NewFlagSet("view", flag.ExitOnError)
 	viewMonth := viewCmd.String("month", "", "Group expenses by: 'month' or 'category'")
 	//importFile := importCmd.String("f", "", "File to import")
+	if len(os.Args) < 2{
+		view.CompareMonth(int(time.Now().Month()), db)
+		return
+	}
+
 
 	switch os.Args[1] {
 	case "import":
@@ -70,6 +76,7 @@ func main() {
 			topExp, _ := db.GetTopExpenses(m)
 			view.CategoryExpenses(expList, total)
 			view.AllExpenses(topExp)
+			view.CompareMonth(m, db)
 		} else {
 			i := 0
 			for i < 12{
@@ -81,9 +88,9 @@ func main() {
 			}
 		}
 
-
 	default:
-		fmt.Println("Expected 'import', 'classify', or 'stats' subcommands")
+		fmt.Println("enesss")
+		view.CompareMonth(int(time.Now().Month()), db)
 	}
 }
 

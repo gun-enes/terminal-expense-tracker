@@ -20,9 +20,22 @@ func (d *DB) AverageDailySpending()int{
 	d.Query(`
 	SELECT 
 	`)
-
 	return 0
 }
+func (d *DB) DropTable() error {
+	createTableSQL := `
+	DROP TABLE expenses;
+	`
+
+	_, err := d.Exec(createTableSQL)
+	if err != nil {
+		return fmt.Errorf("could not create tables: %v", err)
+	}
+
+	return nil
+}
+
+
 
 func (d *DB) GetMonthStats(m int) ([]CategoryStat, float64, error) {
 	rows, err := d.Query(`
@@ -30,7 +43,7 @@ func (d *DB) GetMonthStats(m int) ([]CategoryStat, float64, error) {
 		FROM expenses 
 		WHERE strftime('%m', date) = printf('%02d', ?)
 		GROUP BY category 
-		ORDER BY SUM(amount) DESC
+		ORDER BY SUM(amount) ASC 
 	`, m)
 	if err != nil {
 		return nil, 0, err
@@ -149,19 +162,27 @@ func (d *DB) UpdateCategory(id int, newCategory string) error {
 	return err
 }
 
+func (d *DB) GetCategorized() ([]models.Expense, error) {
+	rows, err := d.Query("SELECT id, date, description, amount, category, source_file, label FROM expenses WHERE category != 'Uncategorized' ORDER BY date DESC")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	return convertRowsToModel(rows), nil
+}
+
 func (d *DB) GetUncategorized() ([]models.Expense, error) {
 	rows, err := d.Query("SELECT id, date, description, amount, category, source_file, label FROM expenses WHERE category = 'Uncategorized' ORDER BY date DESC")
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-
 	return convertRowsToModel(rows), nil
 }
 
 func (d *DB) GetTopExpenses(month int) ([]models.Expense, error) {
 	rows, err := d.Query(`
-		SELECT id, date, description, amount, category, source_file 
+		SELECT id, date, description, amount, category, source_file, label
 		FROM expenses 
 		WHERE strftime('%m', date) = printf('%02d', ?)
 		ORDER BY amount ASC
