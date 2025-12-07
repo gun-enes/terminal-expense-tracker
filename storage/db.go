@@ -123,8 +123,7 @@ func InitDB(filepath string) (*DB, error) {
 		amount REAL NOT NULL,
 		category TEXT NOT NULL DEFAULT 'Uncategorized',
 		source_file TEXT,
-		label TEXT,
-		UNIQUE(date, description, amount) -- Prevent duplicate imports
+		label TEXT
 	);
 	`
 
@@ -163,7 +162,7 @@ func (d *DB) UpdateCategory(id int, newCategory string) error {
 }
 
 func (d *DB) GetCategorized() ([]models.Expense, error) {
-	rows, err := d.Query("SELECT id, date, description, amount, category, source_file, label FROM expenses WHERE category != 'Uncategorized' ORDER BY date DESC")
+	rows, err := d.Query("SELECT id, date, description, amount, category, source_file, label FROM expenses WHERE category != 'Uncategorized' ORDER BY date ASC")
 	if err != nil {
 		return nil, err
 	}
@@ -172,7 +171,7 @@ func (d *DB) GetCategorized() ([]models.Expense, error) {
 }
 
 func (d *DB) GetUncategorized() ([]models.Expense, error) {
-	rows, err := d.Query("SELECT id, date, description, amount, category, source_file, label FROM expenses WHERE category = 'Uncategorized' ORDER BY date DESC")
+	rows, err := d.Query("SELECT id, date, description, amount, category, source_file, label FROM expenses WHERE category = 'Uncategorized' ORDER BY date ASC")
 	if err != nil {
 		return nil, err
 	}
@@ -196,7 +195,7 @@ func (d *DB) GetTopExpenses(month int) ([]models.Expense, error) {
 }
 
 func (d *DB) GetAllExpenses() ([]models.Expense, error) {
-	rows, err := d.Query("SELECT id, date, description, amount, category, source_file, label FROM expenses ORDER BY date DESC")
+	rows, err := d.Query("SELECT id, date, description, amount, category, source_file, label FROM expenses ORDER BY date ASC")
 	if err != nil {
 		return nil, err
 	}

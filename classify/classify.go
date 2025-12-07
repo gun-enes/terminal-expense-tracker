@@ -7,23 +7,20 @@ import (
 	"expense-tracker/utils"
 	"fmt"
 	"os"
-	"slices"
 	"strings"
 )
 
 
 
-func isInCategory(exp models.Expense) string {
+func isInCategory(exp models.Expense, cat models.Category) bool {
 	descUpper := strings.ToUpper(exp.Description)
-	for _, cat := range models.Categories {
-		for _, val := range cat.Aliases {
-			if strings.Contains(descUpper, val) {
-				return val
-			}
+	for _, val := range cat.Aliases {
+		if strings.Contains(descUpper, val) {
+			return true
 		}
 	}
-	return ""
-	}
+	return false
+}
 
 func suggestedCategory(exp models.Expense, history []models.Expense) (string, bool) {
 	// 1. Check History (Exact match)
@@ -31,20 +28,19 @@ func suggestedCategory(exp models.Expense, history []models.Expense) (string, bo
 
 	for _, val := range history {
 		if val.Description == exp.Description {
+			if val.Category == "sigara" {
+				break
+			}
 			return val.Category, true // High confidence (Found in history)
 		}
 	}
-	sigara := []string {"AKARYAKIT", "BUFE"}
-
-	
-
-	if (slices.Contains(sigara, exp.Label) && exp.Amount <= -90.00 && exp.Amount >= -105 && exp.Amount == float64(int(exp.Amount))){
+	if exp.Amount <= -90.00 && exp.Amount >= -105 && exp.Amount == float64(int(exp.Amount)) {
 		return "sigara", false
 	}
-
-	val := isInCategory(exp)
-	if val != ""{
-		return val, true
+	for _, val := range models.Categories {
+		if isInCategory(exp, val) {
+			return val.Name, false // Medium confidence (Keyword match, but verify)
+		}
 	}
 
 	if exp.Label == "Yeme / İçme"{
@@ -57,6 +53,10 @@ func suggestedCategory(exp models.Expense, history []models.Expense) (string, bo
 
 	if exp.Label == "Eğlence / Hobi"{
 		return "eğlence", false
+	}
+
+	if exp.Label == "Sağlık / Bakım"{
+		return "bakım", false
 	}
 
 	return strings.ToLower(exp.Label), false
