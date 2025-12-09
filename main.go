@@ -16,7 +16,7 @@ import (
 func main() {
 	// 1. Setup Paths
 	// We assume the app is run from the root expense-cli/ folder
-	dataDir := "./data"
+	dataDir := "/home/enesgun/personal/expense-tracker/go/data"
 	//filesDir := filepath.Join(dataDir, "files")
 	dbPath := filepath.Join(dataDir, "expenses.db")
 
